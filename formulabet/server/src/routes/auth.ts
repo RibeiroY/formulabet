@@ -26,15 +26,15 @@ export async function authRoutes(fastify: FastifyInstance){
 
 
     fastify.post('/users', async(request)=>{
-        console.log('ESTÁ CHEGANDO AQUI')
+        
         const createUserBody = z.object({
             access_Token: z.string(),
             
 
         })
-        console.log('ESTÁ CHEGANDO AQUI 222222')
+        
         const{access_Token}=createUserBody.parse(request.body)
-        console.log('ESTÁ CHEGANDO AQUI 2.5',access_Token)
+        
         try{
             
             
@@ -49,7 +49,7 @@ export async function authRoutes(fastify: FastifyInstance){
                 Authorization: `Bearer ${access_Token}`,
             }
         })
-        console.log('ESTÁ CHEGANDO AQUI 333333', data)
+        
         const userData = data//await userResponse.json()
         
         const userInfoSchema = z.object({
@@ -60,7 +60,7 @@ export async function authRoutes(fastify: FastifyInstance){
         })
 
         const userInfo=userInfoSchema.parse(userData)
-        console.log('ESTÁ CHEGANDO AQUI 444444')
+       
         let user = await prisma.user.findUnique({
             where: {
                 googleId: userInfo.id
@@ -76,7 +76,7 @@ export async function authRoutes(fastify: FastifyInstance){
                 }
             })
         }
-        console.log('ESTÁ CHEGANDO AQUI 4444444')
+        
         const token = fastify.jwt.sign({
             name:user.name,
             avatarUrl:user.avatarUrl
@@ -84,7 +84,7 @@ export async function authRoutes(fastify: FastifyInstance){
             sub: user.id,
             expiresIn:'7 days',
         })
-        console.log('ESTÁ CHEGANDO AQUI 555555')
+       
         return {token}
     }catch(error){
         console.log("ERRO!!!!!!!!!!!!!!",error)
